@@ -9,7 +9,7 @@ Arduino.prototype.attemptConnection = function () {
                 if (Object.keys(ports).length >= 1) {
                     Object.keys(ports).forEach(function (each) {
                         portMenu.addItem(each, function () { 
-                            myself.connect(each);
+                            myself.connect(ports[each]);
                         })
                     });
                 }

@@ -5,14 +5,20 @@ WorldMorph.prototype.Arduino.getSerialPorts = function (callback) {
     portList = [],
     portcheck = /usb|DevB|rfcomm|acm|^com/i;
 
-    chrome.serial.getDevices(function (devices) { 
-        devices.forEach(function (device) { 
-            if (!myself.isPortLocked(device.path) && portcheck.test(device.path)) {
-                portList[device.path] = device.path; 
-            }
+    if (typeof chrome !== 'undefined') {
+        chrome.serial.getDevices(function (devices) {
+            devices.forEach(function (device) {
+                if (!myself.isPortLocked(device.path) && portcheck.test(device.path)) {
+                    portList[device.path] = device.path;
+                }
+            });
         });
-        callback(portList);
-    });
+    }
+
+    // it is possible to get a real list by scanning with mDNS/bonjour
+    wsurl = 'ws://firmata.local:3031';
+    portList['websocket: ' + wsurl] = wsurl;
+    callback(portList);
 };
 
 // Reverting some changes
